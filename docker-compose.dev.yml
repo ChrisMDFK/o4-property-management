@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  web:
+    container_name: pms-frontend-dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /app/frontend
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    environment:
+      # 將本機 .env 映射給前端（Vite 讀取 import.meta.env）
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+    env_file:
+      - ./.env

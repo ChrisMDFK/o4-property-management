@@ -1,0 +1,20 @@
+# 開發環境：Node + 熱更新
+FROM node:20-alpine
+
+# 修正時區（可選，台灣）
+RUN apk add --no-cache tzdata && cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime && echo "Asia/Taipei" > /etc/timezone
+
+WORKDIR /app
+
+# 先複製前端 package 以快取依賴
+COPY frontend/package*.json ./frontend/
+WORKDIR /app/frontend
+
+# 安裝依賴（若你使用 pnpm/yarn 請改成對應指令）
+RUN npm install
+
+# 開發時把程式掛載進容器，所以這裡不 COPY 原始碼
+EXPOSE 5173
+
+# 預設啟動 vite dev server（開放給 docker-compose 覆蓋）
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
