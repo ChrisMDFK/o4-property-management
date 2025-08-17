@@ -1,0 +1,5 @@
+關閉
+docker-compose down
+
+重啟
+docker-compose up --build
